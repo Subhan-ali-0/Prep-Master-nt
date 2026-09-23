@@ -1,18 +1,13 @@
 export const dynamic = "force-dynamic";
 
-export async function GET(req, { params }) {
+export async function GET() {
   try {
-    const { id } = await params;
-
-    const url = new URL(
-      "https://nt.studybeepro.site/api/nig"
+    const response = await fetch(
+      "https://nt.studybeepro.site/batches.json",
+      {
+        cache: "no-store",
+      }
     );
-
-    url.searchParams.set("overview", id);
-
-    const response = await fetch(url, {
-      cache: "no-store",
-    });
 
     const data = await response.text();
 
@@ -27,7 +22,7 @@ export async function GET(req, { params }) {
   } catch (error) {
     return Response.json(
       {
-        error: "Failed to fetch batch overview",
+        error: "Failed to fetch batches",
         message: error.message,
       },
       { status: 500 }
