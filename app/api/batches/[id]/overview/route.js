@@ -1,34 +1,26 @@
 export const dynamic = "force-dynamic";
 
-export async function GET(req, { params }) {
+export async function GET(request, { params }) {
   try {
-    const { id, folderId } = await params;
+    const { id } = await params;
 
-    const url = new URL(
-      "https://nt.studybeepro.site/api/nig"
-    );
+    const url = new URL("https://nt.studybeepro.site/api/nig");
+    url.searchParams.set("overview", id);
 
-    url.searchParams.set("content", id);
-    url.searchParams.set("folder", folderId);
+    const r = await fetch(url, { cache: "no-store" });
+    const text = await r.text();
 
-    const response = await fetch(url, {
-      cache: "no-store",
-    });
-
-    const data = await response.text();
-
-    return new Response(data, {
-      status: response.status,
+    return new Response(text, {
+      status: r.status,
       headers: {
-        "content-type":
-          response.headers.get("content-type") ||
-          "application/json",
+        "Content-Type":
+          r.headers.get("content-type") || "application/json",
       },
     });
   } catch (error) {
     return Response.json(
       {
-        error: "Failed to fetch folder content",
+        error: "Failed to fetch overview",
         message: error.message,
       },
       { status: 500 }
