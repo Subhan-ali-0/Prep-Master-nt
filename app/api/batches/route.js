@@ -2,26 +2,25 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const response = await fetch(
+    const r = await fetch(
       "https://nt.studybeepro.site/batches.json",
-      {
-        cache: "no-store",
-      }
+      { cache: "no-store" }
     );
 
-    const text = await response.text();
+    const text = await r.text();
 
-    return Response.json({
-      ok: response.ok,
-      status: response.status,
-      contentType: response.headers.get("content-type"),
-      preview: text.slice(0, 1000),
+    return new Response(text, {
+      status: r.status,
+      headers: {
+        "Content-Type":
+          r.headers.get("content-type") || "application/json",
+      },
     });
   } catch (error) {
     return Response.json(
       {
-        ok: false,
-        error: error.message,
+        error: "Failed to fetch batches",
+        message: error.message,
       },
       { status: 500 }
     );
