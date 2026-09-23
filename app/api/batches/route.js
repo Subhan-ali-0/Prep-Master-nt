@@ -9,21 +9,19 @@ export async function GET() {
       }
     );
 
-    const data = await response.text();
+    const text = await response.text();
 
-    return new Response(data, {
+    return Response.json({
+      ok: response.ok,
       status: response.status,
-      headers: {
-        "content-type":
-          response.headers.get("content-type") ||
-          "application/json",
-      },
+      contentType: response.headers.get("content-type"),
+      preview: text.slice(0, 1000),
     });
   } catch (error) {
     return Response.json(
       {
-        error: "Failed to fetch batches",
-        message: error.message,
+        ok: false,
+        error: error.message,
       },
       { status: 500 }
     );
